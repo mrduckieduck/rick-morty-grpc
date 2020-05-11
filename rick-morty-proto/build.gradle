@@ -1,0 +1,38 @@
+apply plugin: "com.google.protobuf"
+
+dependencies {
+
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}"
+
+    compile "com.google.protobuf:protobuf-java:${versions.protobuf}",
+        "com.google.protobuf:protobuf-java-util:${versions.protobuf}",
+        "com.google.protobuf:protobuf-gradle-plugin:${versions.plugins.proto}"
+
+    compile "io.grpc:grpc-protobuf:${versions.grpc}",
+        "io.grpc:grpc-stub:${versions.grpc}",
+        "io.grpc:grpc-kotlin-stub:${versions.kotlinStub}",
+        "io.grpc:grpc-netty:${versions.grpc}"
+
+    compile "javax.annotation:javax.annotation-api:${versions.java.annotations}"
+}
+
+protobuf {
+    protoc {
+        // The artifact spec for the Protobuf Compiler
+        artifact = "com.google.protobuf:protoc:${versions.protobuf}"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${versions.grpc}"
+        }
+        grpckt {
+            artifact = "io.grpc:protoc-gen-grpc-kotlin:${versions.protbufGen}"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+            grpckt {}
+        }
+    }
+}
