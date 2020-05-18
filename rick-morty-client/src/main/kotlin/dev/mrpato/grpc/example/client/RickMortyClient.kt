@@ -1,3 +1,4 @@
+@file:JvmName("RickMortyClient")
 package dev.mrpato.grpc.example.client
 
 import com.fasterxml.jackson.databind.SerializationFeature
