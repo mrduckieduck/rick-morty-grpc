@@ -1,3 +1,40 @@
+plugins {
+    id "application"
+    id "kotlin"
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.3.70"
+}
+
+repositories {
+    jcenter()
+}
+
+group = "dev.mrpato.grpc.example"
+version = "0.0.1"
+
+application  {
+    mainClassName = "dev.mrpato.grpc.example.server.RickMortyServer"
+}
+
 dependencies {
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
+
     compile project(":rick-morty-proto")
+
+    compile "com.google.protobuf:protobuf-java:${versions.protobuf}",
+        "com.google.protobuf:protobuf-java-util:${versions.protobuf}",
+        "com.google.protobuf:protobuf-gradle-plugin:${versions.plugins.proto}"
+
+    compile "io.grpc:grpc-protobuf:${versions.grpc}",
+        "io.grpc:grpc-stub:${versions.grpc}",
+        "io.grpc:grpc-kotlin-stub:${versions.kotlinStub}",
+        "io.grpc:grpc-netty:${versions.grpc}"
+
+    compile "org.jetbrains.exposed:exposed-core:${versions.exposed.core}",
+        "org.jetbrains.exposed:exposed-dao:${versions.exposed.core}",
+        "org.jetbrains.exposed:exposed-jdbc:${versions.exposed.core}"
+
+    compile "com.zaxxer:HikariCP:${versions.hikari}"
+
+    runtime "org.postgresql:postgresql:${versions.postgres}"
 }

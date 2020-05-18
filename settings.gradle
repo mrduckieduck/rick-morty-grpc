@@ -1,5 +1,5 @@
 rootProject.name = "rick-morty-grpc"
 
 include "rick-morty-proto"
-//include "rick-morty-character-server"
-//include "rick-morty-character-voter"
+include "rick-morty-server"
+include "rick-morty-client"

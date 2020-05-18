@@ -1,0 +1,33 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+    id "application"
+}
+
+group "dev.mrpato.grpc.example.client"
+version "1.0-SNAPSHOT"
+
+application {
+    mainClassName = "dev.mrpato.grpc.example.client.RickMortyClient"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    compile project(":rick-morty-proto")
+
+    compile "com.google.protobuf:protobuf-java:${versions.protobuf}",
+        "com.google.protobuf:protobuf-java-util:${versions.protobuf}",
+        "com.google.protobuf:protobuf-gradle-plugin:${versions.plugins.proto}"
+
+    compile "io.grpc:grpc-protobuf:${versions.grpc}",
+        "io.grpc:grpc-stub:${versions.grpc}",
+        "io.grpc:grpc-kotlin-stub:${versions.kotlinStub}",
+        "io.grpc:grpc-netty:${versions.grpc}"
+
+    implementation "io.ktor:ktor-server-netty:${versions.ktor}",
+        "io.ktor:ktor-jackson:${versions.ktor}"
+}

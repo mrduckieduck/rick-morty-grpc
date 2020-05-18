@@ -6,18 +6,19 @@ option java_outer_classname="RickMortyServiceProto";
 import "character.proto";
 import "google/protobuf/empty.proto";
 
-service RickMortyService {
+service RickMortyCharacters {
   rpc GetAllCharacters(google.protobuf.Empty) returns (Characters) {}
   rpc GetCharacter(GetCharacterRequest) returns (Character) {}
-  rpc VoteCharacter(VoteCharacterRequest) returns (VoteCharacterResponse) {}
+  rpc VoteCharacter(VoteCharacterRequest) returns (Character) {}
 }
 
 message VoteCharacterRequest {
   int64 characterId = 1;
+  bool vote = 2;
 }
 
 message VoteCharacterResponse {
-  bool result = 1;
+
 }
 
 message GetCharacterRequest {

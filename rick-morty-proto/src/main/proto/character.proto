@@ -1,18 +1,14 @@
 syntax = "proto3";
 
-option java_package="dev.mrpato.grpc.example.proto";
-option java_outer_classname="CharacterProto";
-
-import "location.proto";
+option java_package = "dev.mrpato.grpc.example.proto";
+option java_outer_classname = "CharacterProto";
 
 message Character {
   int64 id = 1;
   string name = 2;
   string species = 3;
   string gender = 4;
-
-  repeated string episodes = 5;
-  Location location = 6;
+  int32 votes = 5;
 }
 
 message Characters {
