@@ -4,16 +4,21 @@ package dev.mrpato.grpc.example.server
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import dev.mrpato.grpc.example.server.handler.GreetingServiceHandler
 import dev.mrpato.grpc.example.server.handler.RickMortyHandler
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import io.grpc.ServerInterceptors
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.exposed.sql.Database
 
+@ExperimentalCoroutinesApi
 fun main() {
     initDB()
     val server: Server = ServerBuilder
         .forPort(50051)
         .addService(RickMortyHandler())
+        .addService(ServerInterceptors.intercept(GreetingServiceHandler()))
         .build()
     server.start()
     server.awaitTermination()

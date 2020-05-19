@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "dev.mrpato.grpc.example.proto";
+option java_outer_classname = "GreetServiceProto";
+
+service GreetService {
+  rpc Join(stream JoinRequest) returns (stream Greeting) {}
+}
+
+message JoinRequest {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Greeting {
+  string value = 2;
+}

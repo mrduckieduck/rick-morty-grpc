@@ -5,11 +5,13 @@ import dev.mrpato.grpc.example.proto.CharacterProto
 import dev.mrpato.grpc.example.proto.RickMortyCharactersGrpcKt
 import dev.mrpato.grpc.example.proto.RickMortyServiceProto
 import dev.mrpato.grpc.example.server.repository.RickMortyCharacter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
+@ExperimentalCoroutinesApi
 class RickMortyHandler : RickMortyCharactersGrpcKt.RickMortyCharactersCoroutineImplBase() {
 
     override suspend fun getAllCharacters(request: Empty): CharacterProto.Characters {
@@ -58,11 +60,10 @@ class RickMortyHandler : RickMortyCharactersGrpcKt.RickMortyCharactersCoroutineI
         return characterProto.build()
     }
 
-    private fun vote(vote: Boolean, currentVotes: Int): Int {
-        if (currentVotes == 0 && !vote) {
-            return 1
-        }
-        return if (vote) currentVotes + 1 else currentVotes - 1
+    private fun vote(vote: Boolean, currentVotes: Int): Int = when {
+        currentVotes == 0 && !vote -> 1
+        vote -> currentVotes + 1
+        else -> currentVotes - 1
     }
 
 }

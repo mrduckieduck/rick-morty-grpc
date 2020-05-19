@@ -1,17 +1,16 @@
 package dev.mrpato.grpc.example.client.handler
 
 import com.google.protobuf.Empty
+import dev.mrpato.grpc.example.client.utils.createManagedChannel
 import dev.mrpato.grpc.example.proto.CharacterProto
 import dev.mrpato.grpc.example.proto.RickMortyCharactersGrpcKt
 import dev.mrpato.grpc.example.proto.RickMortyServiceProto
-import io.grpc.ManagedChannel
-import io.grpc.ManagedChannelBuilder
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 class RickMortyServiceHandler {
-    private val channel: ManagedChannel = createChanel()
-    private val stub: RickMortyCharactersGrpcKt.RickMortyCharactersCoroutineStub = RickMortyCharactersGrpcKt.RickMortyCharactersCoroutineStub(channel)
+    private val channel = createManagedChannel()
+    private val stub = RickMortyCharactersGrpcKt.RickMortyCharactersCoroutineStub(channel)
 
     suspend fun getAllCharacters(): List<CharacterProto.Character> = coroutineScope {
         val response = async { stub.getAllCharacters(Empty.getDefaultInstance()) }
@@ -37,12 +36,5 @@ class RickMortyServiceHandler {
             stub.voteCharacter(request)
         }
         return@coroutineScope response.await()
-    }
-
-    private fun createChanel(): ManagedChannel {
-        return ManagedChannelBuilder
-            .forAddress("localhost", 50051)
-            .usePlaintext()
-            .build()
     }
 }

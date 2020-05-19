@@ -1,4 +1,5 @@
 @file:JvmName("RickMortyClient")
+
 package dev.mrpato.grpc.example.client
 
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -19,14 +20,22 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.getOrFail
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
+@ExperimentalCoroutinesApi
+val endpoint = RickMortyEndpoint()
+
+@ExperimentalCoroutinesApi
 @KtorExperimentalAPI
 fun Application.module() {
-    val endpoint = RickMortyEndpoint()
     install(DefaultHeaders)
     install(ContentNegotiation) {
         jackson {
-            enable(SerializationFeature.INDENT_OUTPUT) // Pretty Prints the JSON
+            enable(SerializationFeature.INDENT_OUTPUT)
         }
     }
     install(Routing) {
@@ -42,6 +51,7 @@ fun Application.module() {
                 val id = call.parameters.getOrFail("id").toLong()
                 endpoint.vote(id, true)
                 call.respond(HttpStatusCode.Accepted, mapOf("vote" to true))
+
             }
             put("/{id}/votedown") {
                 val id = call.parameters.getOrFail("id").toLong()
@@ -52,8 +62,16 @@ fun Application.module() {
     }
 }
 
+@ExperimentalCoroutinesApi
 @KtorExperimentalAPI
 fun main() {
-    embeddedServer(Netty, 8080, watchPaths = listOf("RickMortyClient"), module = Application::module).start()
-    println(">> Client started!")
+    val port = Random.Default.nextInt(8080, 8090)
+    embeddedServer(Netty, port, watchPaths = listOf("RickMortyClient"), module = Application::module).start()
+    GlobalScope.launch {
+        endpoint.init()
+            .joinStream
+            .collect { greet -> println(">> Broadcast Message: ${greet.value}") }
+
+    }
+    println(">> Client started on the port [:$port]!")
 }
